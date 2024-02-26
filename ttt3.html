@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .square {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            font-weight: bold;
+            border: 2px solid #ccc;
+            cursor: pointer;
+        }
+
+        .square.X {
+            color: #3498db;     /* blue color for X */
+        }
+
+        .square.O {
+            color: #e74c3c;     /* red color for O */
+        }
+
+        .square:hover {
+            background-color: #e0e0e0;
+        }
+
+        #turnIndicator, #winCondition {
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #333;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        #turnIndicator.O {
+            color: #e74c3c;     /* red color for O's turn */
+        }
+        
+        #turnIndicator.X {
+            color: #3498db;     /* blue color for X's turn */
+        }
+
+        #winCondition {
+            color: #27ae60;
+        }
+
+        .startButton {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Tic Tac Toe</h1>
+
+    <div id="turnIndicator"></div>
+
+    <div class="board">
+        <script>
+
+            let currentPlayer = "";     // will be X or O
+            let gameStarted = false;
+
+            const NUM_SQUARES = 9;
+            for (i=0; i<NUM_SQUARES; i++)
+            {
+                id = "sq"+i;
+                document.write( "<div class='square' id='" + id + "'></div>" );
+            }
+
+            for (let j = 0; j < NUM_SQUARES; j++)
+            {
+                id = "sq" + j;
+
+                // add event listener for each square
+                document.getElementById(id).addEventListener("click", function () {
+                    handleSquareClick(j);
+                });
+            }
+
+
+            // function to handle square clicks
+            function handleSquareClick(squareNumber) {
+                const square = document.getElementById("sq" + squareNumber);
+
+                if (gameStarted && square.innerHTML === "") {
+                    square.innerHTML = currentPlayer;
+
+                    alert("Clicked on square: " + squareNumber);
+
+                    // set class for color
+                    square.className = "square " + currentPlayer;
+
+                    // switch player turns
+                    if (currentPlayer === "X") {
+                        currentPlayer = "O";
+                    } else {
+                        currentPlayer = "X";
+                    }
+
+                    updateTurnIndicator();
+                }
+            }
+
+            // function to update the turn indicator
+            function updateTurnIndicator() {
+                const turnIndicator = document.getElementById("turnIndicator");
+                turnIndicator.innerHTML = "Player " + currentPlayer + "'s Turn";
+                turnIndicator.className = currentPlayer;    // add class for color change
+            }
+
+            // function to start the game
+            function startGame() {
+                gameStarted = true;
+                
+                // randomly choose who starts
+                if (Math.random() < 0.5) {
+                    currentPlayer = "X";
+                } else {
+                    currentPlayer = "O";
+                }
+
+                updateTurnIndicator();
+                
+                // clear the board
+                for (let i = 0; i < NUM_SQUARES; i++) {
+                    document.getElementById("sq" + i).innerHTML = "";
+                    document.getElementById("sq" + i).className = "square"; // reset class
+                }
+            }
+
+        </script>
+    </div>
+
+    <div id="winCondition"></div>
+
+    <button class="startButton" onclick="startGame()">Start Game</button>
+
+</body>
+</html>

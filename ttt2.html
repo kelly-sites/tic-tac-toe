@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .square {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            font-weight: bold;
+            border: 2px solid #ccc;
+            cursor: pointer;
+        }
+
+        .square:hover {
+            background-color: #e0e0e0;
+        }
+
+        #turnIndicator, #winCondition {
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #333;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        #turnIndicator {
+            color: #3498db;
+        }
+
+        #winCondition {
+            color: #27ae60;
+        }
+
+        /* Hard coded X and O */
+        #sq0:after {
+            content: 'X';
+            color: #3498db;
+        }
+
+        #sq4:after {
+            content: 'X';
+            color: #3498db;
+        }
+
+        #sq8:after {
+            content: 'O';
+            color: #e74c3c;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Tic Tac Toe</h1>
+
+    <div id="turnIndicator"></div>
+
+    <div class="board">
+        <script>
+
+        const NUM_SQUARES = 9;
+        for (i=0; i<NUM_SQUARES; i++)
+        {
+            id = "sq"+i;
+            document.write( "<div class='square' id='" + id + "'></div>" );
+        }
+
+        </script>
+    </div>
+
+    <div id="winCondition"></div>
+
+</body>
+</html>

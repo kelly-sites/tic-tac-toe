@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .square {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            border: 2px solid #ccc;
+            cursor: pointer;
+        }
+
+        .square.X {
+            color: #3498db;     /* blue color for X */
+        }
+
+        .square.O {
+            color: #e74c3c;     /* red color for O */
+        }
+
+        .square:hover {
+            background-color: #e0e0e0;
+        }
+
+        #turnIndicator, #winCondition {
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #333;
+            font-size: 1.2em;
+            font-weight: bold;
+            visibility: hidden;     /* initially hide the turn button and the win condition button */
+        }
+
+        #turnIndicator.O {
+            color: #e74c3c;     /* red color for O's turn */
+        }
+        
+        #turnIndicator.X {
+            color: #3498db;     /* blue color for X's turn */
+        }
+
+        #winCondition {
+            color: #27ae60;
+        }
+
+        .startButton {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .startButton:hover {
+            background-color: #2980b9;      /* hover color for start button */
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Tic Tac Toe</h1>
+
+    <div id="turnIndicator"></div>
+
+    <div class="board">
+        <script>
+
+            let currentPlayer = "";     // will be X or O
+            let gameStarted = false;
+            let winConditions = [];     // will store winning streaks
+            let gameOver = false;
+
+            const NUM_SQUARES = 9;
+            for (i=0; i<NUM_SQUARES; i++)
+            {
+                id = "sq"+i;
+                document.write( "<div class='square' id='" + id + "'></div>" );
+            }
+
+            for (let j = 0; j < NUM_SQUARES; j++)
+            {
+                id = "sq" + j;
+
+                // add event listener for each square
+                document.getElementById(id).addEventListener("click", function () {
+                    handleSquareClick(j);
+                });
+            }
+
+
+            // function to handle square clicks
+            function handleSquareClick(squareNumber) {
+                const square = document.getElementById("sq" + squareNumber);
+
+                if (gameStarted && square.innerHTML === "" && !gameOver) {
+                    square.innerHTML = currentPlayer;
+
+                    // set class for color
+                    square.className = "square " + currentPlayer;
+
+                    // switch player turns
+                    if (currentPlayer === "X") {
+                        currentPlayer = "O";
+                    } else {
+                        currentPlayer = "X";
+                    }
+
+                    updateTurnIndicator();
+                    checkWinCondition();
+                }
+            }
+
+
+            // function to update the turn indicator
+            function updateTurnIndicator() {
+                const turnIndicator = document.getElementById("turnIndicator");
+                turnIndicator.innerHTML = "Player " + currentPlayer + "'s Turn";
+                turnIndicator.className = currentPlayer;    // add class for color change
+            }
+
+
+            // function to check if a player won or if there's a tie
+            function checkWinCondition() {
+                let moves = Array(9).fill("-");     // will store player's moves
+
+                // update the moves array with the players' moves
+                moves.forEach((element, index) => {
+                    squareValue = document.getElementById("sq" + index).innerHTML;
+                    if (squareValue != "") {
+                        moves[index] = squareValue;
+                    } 
+                
+                });
+
+                // define the possible win conditions
+                winConditions = [
+                    // horizontal wins
+                    moves[0] + moves[1] + moves[2],
+                    moves[3] + moves[4] + moves[5],
+                    moves[6] + moves[7] + moves[8],
+                    // vertical wins
+                    moves[0] + moves[3] + moves[6],
+                    moves[1] + moves[4] + moves[7],
+                    moves[2] + moves[5] + moves[8],
+                    // diagonal wins
+                    moves[0] + moves[4] + moves[8],
+                    moves[2] + moves[4] + moves[6],
+                ];
+
+                // check for a win
+                for (let condition of winConditions) {
+                    if (condition === "XXX" || condition === "OOO") {
+                        displayWinCondition(condition);
+                        return;
+                    }
+                }
+
+                // check for stalemate
+                if (!moves.includes("-")) {
+                    displayStalemate();
+                    return;
+                }
+            }
+
+
+            // function to display who won the game
+            function displayWinCondition(condition) {
+                document.getElementById("winCondition").innerHTML = "Player " + condition[0] + " wins!";
+                winCondition.style.visibility = 'visible';
+                gameOver = true;
+            }
+
+
+            // function to display a stalemate
+            function displayStalemate() {
+                document.getElementById("winCondition").innerHTML = "It's a stalemate!";
+                winCondition.style.visibility = 'visible';
+                gameOver = true;
+            }
+
+
+            // function to start the game
+            function startGame() {
+                // reset all game metrics
+                gameStarted = true;
+                moves = Array(9).fill("-");
+                winConditions = [];
+                gameOver = false;
+                document.getElementById("winCondition").innerHTML = "";     // clear win condition
+                turnIndicator.style.visibility = 'visible';
+                winCondition.style.visibility = 'hidden';
+
+                // randomly choose who starts
+                if (Math.random() < 0.5) {
+                    currentPlayer = "X";
+                } else {
+                    currentPlayer = "O";
+                }
+
+                // print the player whose turn it is
+                updateTurnIndicator();
+                
+                // clear the board
+                for (let i = 0; i < NUM_SQUARES; i++) {
+                    document.getElementById("sq" + i).innerHTML = "";
+                    document.getElementById("sq" + i).className = "square";     // reset class
+                }
+
+                // update the button text
+                const startButton = document.querySelector(".startButton");
+                startButton.textContent = "Restart Game";
+            }
+
+        </script>
+    </div>
+
+    <div id="winCondition"></div>
+
+    <button class="startButton" onclick="startGame()">Start Game</button>
+
+</body>
+</html>
